@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Link, MessageSquare, User, Download, Copy, Check, LucideIcon } from 'lucide-react';
+import { Link, MessageSquare, User, LucideIcon } from 'lucide-react';
 
 // Déclaration globale pour window.QRious
 declare global {
@@ -26,7 +26,6 @@ interface Tab {
 const QRCodeGenerator: React.FC = () => {
   const [activeTab, setActiveTab] = useState<string>('url');
   const [qrData, setQrData] = useState<string>('');
-  const [copied, setCopied] = useState<boolean>(false);
   const qrContainerRef = useRef<HTMLDivElement>(null);
 
   // États des formulaires pour différents types
@@ -40,6 +39,10 @@ const QRCodeGenerator: React.FC = () => {
     organization: '',
     url: ''
   });
+
+  // Couleurs de personnalisation
+  const [fgColor, setFgColor] = useState<string>('#000000');
+  const [bgColor, setBgColor] = useState<string>('#ffffff');
 
   // Génération de QR Code utilisant la bibliothèque QRious via CDN
   const generateQRCode = async (text: string): Promise<void> => {
@@ -82,14 +85,14 @@ const QRCodeGenerator: React.FC = () => {
         element: canvas,
         value: text,
         size: 300,
-        background: 'white',
-        foreground: 'black',
+        background: bgColor,
+        foreground: fgColor,
         level: 'M'
       });
       // Styliser le canvas
-      canvas.className = 'w-full h-auto neu-card';
-      canvas.style.maxWidth = '300px';
-      canvas.style.height = 'auto';
+      canvas.style.maxWidth = '200px';
+      canvas.style.height = '200px';
+      canvas.style.border = '1px solid #ccc';
     } catch (error) {
       console.error('Erreur lors de la création du QR code :', error);
       generateFallbackQR(text);
@@ -105,9 +108,9 @@ const QRCodeGenerator: React.FC = () => {
     const encodedData = encodeURIComponent(text);
     img.src = `https://chart.googleapis.com/chart?chs=300x300&cht=qr&chl=${encodedData}&choe=UTF-8`;
     img.alt = 'QR Code généré';
-    img.className = 'w-full h-auto neu-card p-4';
-    img.style.maxWidth = '300px';
-    img.style.height = 'auto';
+    img.style.maxWidth = '200px';
+    img.style.height = '200px';
+    img.style.border = '1px solid #ccc';
     // Ajouter la gestion d'erreur pour l'image de repli
     img.onerror = () => {
       // Si Google Charts échoue aussi, essayer l'API QR Server
@@ -158,7 +161,7 @@ END:VCARD`;
     setQrData(data);
     generateQRCode(data);
     // eslint-disable-next-line
-  }, [activeTab, urlInput, textInput, contactInfo]);
+  }, [activeTab, urlInput, textInput, contactInfo, fgColor, bgColor]);
 
   const downloadQRCode = (): void => {
     if (!qrData) return;
@@ -179,35 +182,6 @@ END:VCARD`;
     }
   };
 
-  const copyToClipboard = async (): Promise<void> => {
-    if (qrData) {
-      try {
-        await navigator.clipboard.writeText(qrData);
-        setCopied(true);
-        setTimeout(() => setCopied(false), 2000);
-      } catch (err) {
-        console.error('Échec de la copie du texte : ', err);
-      }
-    }
-  };
-
-  const resetForm = (): void => {
-    setUrlInput('');
-    setTextInput('');
-    setContactInfo({
-      firstName: '',
-      lastName: '',
-      phone: '',
-      email: '',
-      organization: '',
-      url: ''
-    });
-    setQrData('');
-    if (qrContainerRef.current) {
-      qrContainerRef.current.innerHTML = '';
-    }
-  };
-
   const tabs: Tab[] = [
     { id: 'url', label: 'URL', icon: Link },
     { id: 'text', label: 'Texte', icon: MessageSquare },
@@ -215,163 +189,100 @@ END:VCARD`;
   ];
 
   return (
-    <div className="max-w-xl mx-auto p-6 mt-8 neu-card">
-      <h1 className="text-2xl font-bold mb-2 flex items-center gap-2">
-        <span className="text-blue-600"><Link className="inline h-7 w-7" /></span>
-        Générateur de QR Code
-      </h1>
-      <p className="text-gray-600 mb-4">Générez des QR codes pour les URL, texte et informations de contact.</p>
+    <>
+      <section id="generator-panel">
+        <div className="form-section">
+          <div id="tabs">
+            {tabs.map((tab) => {
+              const IconComponent = tab.icon;
+              return (
+                <button
+                  key={tab.id}
+                  className={activeTab === tab.id ? 'active' : ''}
+                  onClick={() => setActiveTab(tab.id)}
+                  type="button"
+                >
+                  <IconComponent className="h-4 w-4" /> {tab.label}
+                </button>
+              );
+            })}
+          </div>
 
-      {/* Tabs */}
-      <div className="flex space-x-2 mb-6">
-        {tabs.map((tab) => {
-          const IconComponent = tab.icon;
-          return (
-            <button
-              key={tab.id}
-              className={`neu-button neu-tab ${activeTab === tab.id ? 'active' : ''}`}
-              onClick={() => setActiveTab(tab.id)}
-              type="button"
-            >
-              <IconComponent className="h-4 w-4" />
-              {tab.label}
-            </button>
-          );
-        })}
-      </div>
+          {activeTab === 'url' && (
+            <input
+              type="text"
+              placeholder="Enter URL"
+              value={urlInput}
+              onChange={(e) => setUrlInput(e.target.value)}
+            />
+          )}
 
-      {/* Formulaires dynamiques */}
-      {activeTab === 'url' && (
-        <div className="mb-4">
-          <label className="block text-sm font-medium mb-1" htmlFor="url-input">
-            Saisir URL
-          </label>
-          <input
-            id="url-input"
-            type="text"
-            className="neu-input"
-            placeholder="exemple.com"
-            value={urlInput}
-            onChange={(e) => setUrlInput(e.target.value)}
-            autoComplete="off"
-          />
-          <p className="text-xs text-gray-500 mt-1">
-            Saisissez une URL de site web. Si vous n'incluez pas http://, nous ajouterons automatiquement https://.
-          </p>
+          {activeTab === 'text' && (
+            <textarea
+              rows={3}
+              placeholder="Enter text"
+              value={textInput}
+              onChange={(e) => setTextInput(e.target.value)}
+            />
+          )}
+
+          {activeTab === 'contact' && (
+            <div>
+              <input
+                type="text"
+                placeholder="Name"
+                value={contactInfo.firstName}
+                onChange={(e) => setContactInfo({ ...contactInfo, firstName: e.target.value })}
+              />
+              <input
+                type="tel"
+                placeholder="Phone"
+                value={contactInfo.phone}
+                onChange={(e) => setContactInfo({ ...contactInfo, phone: e.target.value })}
+              />
+              <input
+                type="email"
+                placeholder="Email"
+                value={contactInfo.email}
+                onChange={(e) => setContactInfo({ ...contactInfo, email: e.target.value })}
+              />
+            </div>
+          )}
+
+          <button onClick={() => generateQRCode(qrData)}>Generate</button>
         </div>
-      )}
-
-      {activeTab === 'text' && (
-        <div className="mb-4">
-          <label className="block text-sm font-medium mb-1" htmlFor="text-input">
-            Saisir Texte
-          </label>
-          <textarea
-            id="text-input"
-            className="neu-input"
-            rows={3}
-            placeholder="Votre texte ici..."
-            value={textInput}
-            onChange={(e) => setTextInput(e.target.value)}
-          />
+        <div id="preview">
+          <div ref={qrContainerRef} id="qr-preview" />
         </div>
-      )}
+      </section>
 
-      {activeTab === 'contact' && (
-        <div className="mb-4">
-          <label className="block text-sm font-medium mb-1">Informations de Contact</label>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+      {qrData && (
+        <section id="customization">
+          <h2>Customize</h2>
+          <div className="color-picker">
+            <label htmlFor="fgColor">Code Color</label>
             <input
-              type="text"
-              className="neu-input"
-              placeholder="Prénom"
-              value={contactInfo.firstName}
-              onChange={(e) => setContactInfo({ ...contactInfo, firstName: e.target.value })}
-              autoComplete="off"
-            />
-            <input
-              type="text"
-              className="neu-input"
-              placeholder="Nom"
-              value={contactInfo.lastName}
-              onChange={(e) => setContactInfo({ ...contactInfo, lastName: e.target.value })}
-              autoComplete="off"
-            />
-            <input
-              type="text"
-              className="neu-input"
-              placeholder="Numéro de téléphone"
-              value={contactInfo.phone}
-              onChange={(e) => setContactInfo({ ...contactInfo, phone: e.target.value })}
-              autoComplete="off"
-            />
-            <input
-              type="email"
-              className="neu-input"
-              placeholder="Adresse e-mail"
-              value={contactInfo.email}
-              onChange={(e) => setContactInfo({ ...contactInfo, email: e.target.value })}
-              autoComplete="off"
-            />
-            <input
-              type="text"
-              className="neu-input"
-              placeholder="Organisation"
-              value={contactInfo.organization}
-              onChange={(e) => setContactInfo({ ...contactInfo, organization: e.target.value })}
-              autoComplete="off"
-            />
-            <input
-              type="text"
-              className="neu-input"
-              placeholder="Site web"
-              value={contactInfo.url}
-              onChange={(e) => setContactInfo({ ...contactInfo, url: e.target.value })}
-              autoComplete="off"
+              type="color"
+              id="fgColor"
+              value={fgColor}
+              onChange={(e) => setFgColor(e.target.value)}
             />
           </div>
-          <p className="text-xs text-gray-500 mt-1">
-            Remplissez le formulaire pour générer votre QR code
-          </p>
-        </div>
-      )}
-
-      {/* QR Code */}
-      <div className="flex flex-col items-center gap-3 my-6">
-        <div ref={qrContainerRef} className="w-[300px] h-[300px] flex items-center justify-center neu-card" />
-        {qrData && (
-          <div className="flex gap-2">
-            <button
-              onClick={downloadQRCode}
-              className="neu-button"
-              type="button"
-            >
-              <Download className="h-4 w-4" />
-              Télécharger
-            </button>
-            <button
-              onClick={copyToClipboard}
-              className="neu-button"
-              type="button"
-            >
-              {copied ? <Check className="h-4 w-4 text-green-600" /> : <Copy className="h-4 w-4" />}
-              {copied ? 'Copié !' : 'Copier les données'}
-            </button>
-            <button
-              onClick={resetForm}
-              className="neu-button"
-              type="button"
-            >
-              Effacer tous les champs
-            </button>
+          <div className="color-picker">
+            <label htmlFor="bgColor">Background Color</label>
+            <input
+              type="color"
+              id="bgColor"
+              value={bgColor}
+              onChange={(e) => setBgColor(e.target.value)}
+            />
           </div>
-        )}
-      </div>
-
-      <div className="text-xs text-gray-400 text-center mt-6">
-        Générez des QR codes instantanément – Aucune donnée stockée – Gratuit d'utilisation
-      </div>
-    </div>
+          <div id="download-options">
+            <button onClick={downloadQRCode}>Download PNG</button>
+          </div>
+        </section>
+      )}
+    </>
   );
 };
 
