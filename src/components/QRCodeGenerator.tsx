@@ -68,6 +68,7 @@ const QRCodeGenerator: React.FC = () => {
     }
   };
 
+  // Correction : suppression de la variable inutilisée 'qr'
   const createQR = (text: string): void => {
     if (!qrContainerRef.current) return;
     try {
@@ -76,8 +77,8 @@ const QRCodeGenerator: React.FC = () => {
       // Créer l'élément canvas
       const canvas = document.createElement('canvas');
       qrContainerRef.current.appendChild(canvas);
-      // Générer le QR code
-      const qr = new window.QRious({
+      // Générer le QR code (pas de variable inutilisée)
+      new window.QRious({
         element: canvas,
         value: text,
         size: 300,
