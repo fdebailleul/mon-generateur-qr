@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QR Code Generator</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header>
+    <div class="logo">QRGen</div>
+    <nav>
+      <a href="#">Product</a>
+      <a href="#">Resources</a>
+      <a href="#">Support</a>
+      <a href="#">About</a>
+      <a href="#">Blog</a>
+    </nav>
+    <div class="auth">
+      <a href="#" class="signin">Sign in</a>
+      <a href="#" class="signup">Sign up</a>
+    </div>
+  </header>
+
+  <main>
+    <section id="generator-panel">
+      <div class="form-section">
+        <div id="tabs">
+          <button data-tab="url" onclick="showTab('url')">URL</button>
+          <button data-tab="text" onclick="showTab('text')">Text</button>
+          <button data-tab="contact" onclick="showTab('contact')">Contact</button>
+        </div>
+        <div id="url" class="tab-content">
+          <input type="url" placeholder="Enter URL">
+        </div>
+        <div id="text" class="tab-content" style="display:none;">
+          <textarea rows="3" placeholder="Enter text"></textarea>
+        </div>
+        <div id="contact" class="tab-content" style="display:none;">
+          <input type="text" placeholder="Name">
+          <input type="tel" placeholder="Phone">
+          <input type="email" placeholder="Email">
+        </div>
+        <button onclick="generate()" style="background:#00bfff;color:#fff;border:none;padding:10px 20px;border-radius:6px;">Generate</button>
+      </div>
+      <div id="preview">
+        <div id="qr-preview"></div>
+      </div>
+    </section>
+
+    <section id="customization" style="display:none;">
+      <h2>Customize</h2>
+      <div class="color-picker">
+        <label for="fgColor">Code Color</label>
+        <input type="color" id="fgColor" value="#000000" onchange="applyCustomization()">
+      </div>
+      <div class="color-picker">
+        <label for="bgColor">Background Color</label>
+        <input type="color" id="bgColor" value="#ffffff" onchange="applyCustomization()">
+      </div>
+      <div>
+        <label>Logo Upload (coming soon)</label>
+      </div>
+      <div>
+        <label>Frame Style</label>
+        <select onchange="applyCustomization()">
+          <option>Classic</option>
+          <option>Rounded</option>
+          <option>Pixel</option>
+          <option>Smooth</option>
+        </select>
+      </div>
+      <div id="download-options">
+        <button onclick="download('png')">Download PNG</button>
+        <button onclick="download('svg')">Download SVG</button>
+      </div>
+    </section>
+
+    <section id="pro-features">
+      <h3>Go Pro</h3>
+      <p>Unlock dynamic QR codes with:</p>
+      <ul>
+        <li>Edit URL later</li>
+        <li>Scan analytics</li>
+        <li>Add your logo</li>
+      </ul>
+      <button>Go Pro</button>
+    </section>
+  </main>
+
+  <footer>
+    <a href="#">Help Center</a> •
+    <a href="#">Privacy</a> •
+    <a href="#">Terms</a>
+    <div>© QRGen Co.</div>
+  </footer>
+  <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,170 @@
+/* Basic Reset */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 16px;
+  color: #333;
+  background: #fff;
+  line-height: 1.5;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  border-bottom: 1px solid #eee;
+}
+
+header nav a {
+  margin-right: 20px;
+  color: #333;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+header .auth a {
+  margin-left: 15px;
+  text-decoration: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-weight: 600;
+}
+
+header .auth .signup {
+  background: #00bfff;
+  color: #fff;
+}
+
+main {
+  max-width: 960px;
+  margin: 40px auto;
+  padding: 0 20px;
+}
+
+#generator-panel {
+  display: flex;
+  flex-wrap: wrap;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  border-radius: 6px;
+  padding: 20px;
+}
+
+#tabs {
+  display: flex;
+  margin-bottom: 20px;
+}
+
+#tabs button {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #ddd;
+  background: #f9f9f9;
+  cursor: pointer;
+}
+
+#tabs button.active {
+  border-bottom: 2px solid #00bfff;
+  background: #fff;
+}
+
+.form-section {
+  flex: 1;
+  min-width: 260px;
+  padding-right: 20px;
+}
+
+.form-section input, .form-section textarea {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  margin-bottom: 10px;
+}
+
+#preview {
+  flex: 1;
+  min-width: 260px;
+  text-align: center;
+}
+
+#preview canvas, #preview img {
+  width: 200px;
+  height: 200px;
+  border: 1px solid #ccc;
+  margin-bottom: 10px;
+}
+
+#customization {
+  margin-top: 20px;
+  padding: 20px;
+  border-top: 1px solid #eee;
+}
+
+.color-picker {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.color-picker label {
+  flex: 1;
+}
+
+.color-picker input {
+  width: 60px;
+  height: 32px;
+}
+
+#download-options {
+  margin-top: 10px;
+}
+
+#download-options button {
+  background: #00bfff;
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  margin-right: 10px;
+  cursor: pointer;
+}
+
+#pro-features {
+  margin-top: 40px;
+  padding: 20px;
+  background: #f5f8ff;
+  border: 1px solid #cce7ff;
+  border-radius: 6px;
+}
+
+#pro-features ul {
+  list-style: disc;
+  margin-left: 20px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+#pro-features button {
+  background: #00bfff;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+footer {
+  text-align: center;
+  padding: 20px;
+  border-top: 1px solid #eee;
+  margin-top: 40px;
+  font-size: 14px;
+}
+
+@media (max-width: 600px) {
+  #generator-panel { flex-direction: column; }
+  #tabs { flex-direction: column; }
+  #tabs button { margin-bottom: 5px; }
+}
