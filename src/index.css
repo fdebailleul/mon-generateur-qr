@@ -5,9 +5,58 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background: #e0e0e0; /* light gray background for neumorphism */
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+/* Neumorphism styles */
+:root {
+  --neu-bg: #e0e0e0;
+  --neu-shadow-light: #ffffff;
+  --neu-shadow-dark: #bebebe;
+}
+
+.neu-card {
+  background: var(--neu-bg);
+  border-radius: 20px;
+  box-shadow: -8px -8px 16px var(--neu-shadow-light),
+    8px 8px 16px var(--neu-shadow-dark);
+}
+
+.neu-input {
+  width: 100%;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 12px;
+  background: var(--neu-bg);
+  box-shadow: inset -4px -4px 8px var(--neu-shadow-light),
+    inset 4px 4px 8px var(--neu-shadow-dark);
+  font-size: 1rem;
+}
+
+.neu-button {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 12px;
+  background: var(--neu-bg);
+  box-shadow: -4px -4px 8px var(--neu-shadow-light),
+    4px 4px 8px var(--neu-shadow-dark);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.neu-button:active {
+  box-shadow: inset -4px -4px 8px var(--neu-shadow-light),
+    inset 4px 4px 8px var(--neu-shadow-dark);
+}
+
+.neu-tab.active {
+  box-shadow: inset -4px -4px 8px var(--neu-shadow-light),
+    inset 4px 4px 8px var(--neu-shadow-dark);
 }
